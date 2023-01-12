@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: docker-repo-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: es-local-storage
+  local:
+    path: /var/registry-images
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: work
+          operator: In
+          values:
+          - infra
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: docker-repo-pvc
+  namespace: registry
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: es-local-storage
+  resources:
+    requests:
+      storage: 1Gi
